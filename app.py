@@ -213,19 +213,19 @@ def main():
             # Display results
             st.subheader("Migration Results")
             
-            # Get the dashboard identifier from the response
-            dashboard_identifier = import_result.get('dashboard', {}).get('identifier', import_result['dashboard']['dashboardId'])
+            # Get the workbook identifier from the response
+            workbook_identifier = import_result.get('workbook', {}).get('identifier', import_result['workbook']['id'])
             
-            # Create dashboard URL using identifier
-            dashboard_url = f"{target_url}/dashboards/{dashboard_identifier}"
+            # Create dashboard URL using workbook identifier
+            dashboard_url = f"{target_url}/dashboards/{workbook_identifier}"
             
             # Display results with clickable link
             st.markdown(f"""
             **Migration completed successfully!**
             
             - **New Dashboard ID:** `{import_result['dashboard']['dashboardId']}`
-            - **Dashboard Identifier:** `{dashboard_identifier}`
             - **Workbook ID:** `{import_result['workbook']['id']}`
+            - **Workbook Identifier:** `{workbook_identifier}`
             - **Workbook Name:** `{import_result['workbook']['name']}`
             
             [View Migrated Dashboard]({dashboard_url})
@@ -235,8 +235,8 @@ def main():
             with st.expander("View Raw Data"):
                 st.json({
                     "new_dashboard_id": import_result["dashboard"]["dashboardId"],
-                    "dashboard_identifier": dashboard_identifier,
                     "workbook_id": import_result["workbook"]["id"],
+                    "workbook_identifier": workbook_identifier,
                     "workbook_name": import_result["workbook"]["name"]
                 })
 
