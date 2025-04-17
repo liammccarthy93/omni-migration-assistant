@@ -128,15 +128,22 @@ def main():
             help="Your Omni API token for the source environment"
         )
 
+        # Checkbox to reuse source credentials
+        reuse_credentials = st.checkbox(
+            "Use source credentials for target environment",
+            help="If checked, the source URL and API token will be used for the target environment"
+        )
+
         # Target environment
         st.subheader("Target Environment")
         target_url = st.text_input(
             "Target Omni URL",
             value=os.getenv("NEXT_PUBLIC_TARGET_OMNI_URL", ""),
-            help="Must start with https:// (e.g., https://target-company.omniapp.co)"
+            help="Must start with https:// (e.g., https://target-company.omniapp.co)",
+            disabled=reuse_credentials
         )
         # Show immediate validation for target URL
-        if target_url:
+        if target_url and not reuse_credentials:
             is_valid, error = validate_url(target_url)
             if not is_valid:
                 st.error(error)
@@ -145,8 +152,14 @@ def main():
             "Target API Token",
             type="password",
             value=os.getenv("TARGET_OMNI_API_TOKEN", ""),
-            help="Your Omni API token for the target environment"
+            help="Your Omni API token for the target environment",
+            disabled=reuse_credentials
         )
+
+    # If reuse credentials is checked, use source values for target
+    if reuse_credentials:
+        target_url = source_url
+        target_token = source_token
 
     # Validate all configuration
     is_valid_config, config_errors = validate_config(source_url, source_token, target_url, target_token)
