@@ -212,11 +212,28 @@ def main():
 
             # Display results
             st.subheader("Migration Results")
-            st.json({
-                "new_dashboard_id": import_result["dashboard"]["dashboardId"],
-                "workbook_id": import_result["workbook"]["id"],
-                "workbook_name": import_result["workbook"]["name"]
-            })
+            
+            # Create dashboard URL
+            dashboard_url = f"{target_url}/dashboards/{import_result['dashboard']['dashboardId']}"
+            
+            # Display results with clickable link
+            st.markdown(f"""
+            **Migration completed successfully!**
+            
+            - **New Dashboard ID:** `{import_result['dashboard']['dashboardId']}`
+            - **Workbook ID:** `{import_result['workbook']['id']}`
+            - **Workbook Name:** `{import_result['workbook']['name']}`
+            
+            [View Migrated Dashboard]({dashboard_url})
+            """)
+            
+            # Also show the raw JSON data
+            with st.expander("View Raw Data"):
+                st.json({
+                    "new_dashboard_id": import_result["dashboard"]["dashboardId"],
+                    "workbook_id": import_result["workbook"]["id"],
+                    "workbook_name": import_result["workbook"]["name"]
+                })
 
         except Exception as e:
             st.error(f"Migration failed: {str(e)}")
