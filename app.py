@@ -4,7 +4,7 @@ from typing import Optional
 import json
 import requests
 from dataclasses import dataclass
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 import pandas as pd
 from datetime import datetime
 
@@ -216,8 +216,10 @@ def main():
             # Get the workbook identifier from the response
             workbook_identifier = import_result.get('workbook', {}).get('identifier', import_result['workbook']['id'])
             
-            # Create dashboard URL using workbook identifier
-            dashboard_url = f"{target_url}/dashboards/{workbook_identifier}"
+            # Create dashboard URL using workbook identifier - ensure no double slashes
+            # Remove trailing slash from target_url if it exists
+            base_url = target_url.rstrip('/')
+            dashboard_url = f"{base_url}/dashboards/{workbook_identifier}"
             
             # Display results with clickable link
             st.markdown(f"""
