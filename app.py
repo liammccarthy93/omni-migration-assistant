@@ -5,6 +5,8 @@ import json
 import requests
 from dataclasses import dataclass
 from urllib.parse import urlparse
+import pandas as pd
+from datetime import datetime
 
 @dataclass
 class OmniEnvironment:
@@ -83,6 +85,18 @@ def main():
         page_title="Omni Dashboard Migration Assistant",
         page_icon="🔄",
         layout="wide"
+    )
+
+    # Add GitHub link to sidebar
+    st.sidebar.markdown(
+        """
+        <div style='position: fixed; bottom: 20px;'>
+            <a href='https://github.com/liammccarthy93/omni-migration-assistant' target='_blank'>
+                <img src='https://img.shields.io/badge/GitHub-View%20on%20GitHub-blue?style=flat&logo=github' alt='View on GitHub'/>
+            </a>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
     st.title("🔄 Omni Dashboard Migration Assistant")
