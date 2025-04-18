@@ -83,7 +83,7 @@ def validate_config(source_url: str, source_token: str, target_url: str, target_
 def main():
     st.set_page_config(
         page_title="Omni Dashboard Migration Assistant",
-        page_icon="🔄",
+        page_icon=None,
         layout="wide"
     )
 
@@ -119,7 +119,7 @@ def main():
         unsafe_allow_html=True
     )
 
-    st.title("🔄 Omni Dashboard Migration Assistant")
+    st.title("Omni Dashboard Migration Assistant")
     st.markdown("""
     This tool helps you migrate dashboards between Omni environments.
     """)
