@@ -87,6 +87,26 @@ def main():
         layout="wide"
     )
 
+    # Custom CSS for error messages
+    st.markdown("""
+        <style>
+        .error-message {
+            background-color: #FEF2F2;
+            border: 1px solid #FEE2E2;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 8px 0;
+            color: #991B1B;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .error-message strong {
+            font-weight: 600;
+            color: #7F1D1D;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
     # Add GitHub link to sidebar
     st.sidebar.markdown(
         """
@@ -119,7 +139,7 @@ def main():
         if source_url:
             is_valid, error = validate_url(source_url)
             if not is_valid:
-                st.error(error)
+                st.markdown(f'<div class="error-message"><strong>Error:</strong> {error}</div>', unsafe_allow_html=True)
                 
         source_token = st.text_input(
             "Source API Token",
@@ -146,7 +166,7 @@ def main():
         if target_url and not reuse_credentials:
             is_valid, error = validate_url(target_url)
             if not is_valid:
-                st.error(error)
+                st.markdown(f'<div class="error-message"><strong>Error:</strong> {error}</div>', unsafe_allow_html=True)
                 
         target_token = st.text_input(
             "Target API Token",
@@ -165,7 +185,7 @@ def main():
     is_valid_config, config_errors = validate_config(source_url, source_token, target_url, target_token)
     if not is_valid_config:
         for error in config_errors:
-            st.error(error)
+            st.markdown(f'<div class="error-message"><strong>Error:</strong> {error}</div>', unsafe_allow_html=True)
         return
 
     # Create API clients
