@@ -226,6 +226,7 @@ def main():
                     "dashboard": export_data["dashboard"],
                     "document": export_data["document"],
                     "workbookModel": export_data["workbookModel"],
+                    "queryModels": export_data.get("queryModels", []),
                     "exportVersion": "0.1"
                 })
                 st.success("Dashboard imported successfully!")
