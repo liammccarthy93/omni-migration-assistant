@@ -41,6 +41,9 @@ class OmniAPI:
 
     def import_dashboard(self, data: dict) -> dict:
         return self._fetch("/api/unstable/documents/import", method="POST", data=data)
+        
+    def move_document(self, document_id: str, folder_id: str) -> dict:
+        return self._fetch(f"/api/unstable/documents/{document_id}/move", method="POST", data={"folderId": folder_id})
 
 def validate_url(url: str) -> tuple[bool, str]:
     """Validate URL format and scheme."""
@@ -212,6 +215,12 @@ def main():
         )
         if target_model_id:
             st.info(f"Target Environment: {target_url}")
+            
+        # Add destination folder input
+        destination_folder_id = st.text_input(
+            "Destination Folder ID (Optional)",
+            help="The ID of the folder where you want to place the migrated dashboard. If not provided, the dashboard will be placed in your personal folder."
+        )
 
     # Migration button
     if st.button("Start Migration", type="primary", disabled=not all([source_dashboard_id, target_model_id])):
@@ -230,6 +239,12 @@ def main():
                     "exportVersion": "0.1"
                 })
                 st.success("Dashboard imported successfully!")
+                
+                # Move the document to the specified folder if provided
+                if destination_folder_id:
+                    with st.spinner("Moving dashboard to specified folder..."):
+                        target_api.move_document(import_result["document"]["id"], destination_folder_id)
+                        st.success("Dashboard moved to specified folder!")
 
             # Display results
             st.subheader("Migration Results")
