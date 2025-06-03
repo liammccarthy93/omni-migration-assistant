@@ -25,16 +25,23 @@ class OmniAPI:
         
         url = f"{self.environment.base_url}{endpoint}"
         
-        if method == "GET":
-            response = requests.get(url, headers=headers)
-        else:
-            response = requests.post(url, headers=headers, json=data)
-            
-        if not response.ok:
-            error_detail = response.json().get("detail", response.text)
-            raise Exception(f"Omni API Error: {error_detail}")
-            
-        return response.json()
+        try:
+            if method == "GET":
+                response = requests.get(url, headers=headers)
+            else:
+                response = requests.post(url, headers=headers, json=data)
+                
+            if not response.ok:
+                error_detail = response.json().get("detail", response.text)
+                raise Exception(f"Omni API Error: {error_detail}")
+                
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Network Error: {str(e)}")
+        except json.JSONDecodeError as e:
+            raise Exception(f"Invalid JSON Response: {str(e)}")
+        except Exception as e:
+            raise Exception(f"Unexpected Error: {str(e)}")
 
     def export_dashboard(self, dashboard_id: str) -> dict:
         return self._fetch(f"/api/unstable/documents/{dashboard_id}/export")
@@ -280,6 +287,16 @@ def main():
 
         except Exception as e:
             st.error(f"Migration failed: {str(e)}")
+            # Add debug information
+            with st.expander("Debug Information"):
+                st.markdown("### Error Details")
+                st.code(str(e))
+                st.markdown("### Export Data (if available)")
+                if 'export_data' in locals():
+                    st.json(export_data)
+                st.markdown("### Import Result (if available)")
+                if 'import_result' in locals():
+                    st.json(import_result)
 
 if __name__ == "__main__":
     main() 
